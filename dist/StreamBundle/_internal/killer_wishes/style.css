@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body {
+    background-color: transparent;
+    font-family: 'Bebas Neue', sans-serif;
+    color: #e0e0e0;
+    overflow: hidden;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    margin: 0;
+}
+
+.wish-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    padding: 15px;
+    background-color: rgba(10, 10, 10, 0.8);
+    border: 2px solid #ff4500;
+    border-radius: 8px;
+    box-sizing: border-box; /* Stellt sicher, dass Padding und Border in der Breite enthalten sind */
+}
+
+.wish-title {
+    font-size: 1.8em; /* 28px, passend zum Subathon-Titel */
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 2px;
+    padding-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.wish-item {
+    margin-bottom: 15px;
+    text-align: center; /* Zentriert den Text für einen cleaneren Look */
+}
+
+/* Entferne den letzten Abstand für ein sauberes Layout */
+.wish-item:last-child {
+    margin-bottom: 0;
+}
+
+.wish-text {
+    font-size: 1.4em; /* 22px */
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.wish-user {
+    font-size: 0.9em; /* 14px */
+    color: #bdbdbd;
+    font-style: italic;
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    text-transform: none; /* Usernamen nicht in Großbuchstaben */
+}

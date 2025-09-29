@@ -1,0 +1,8 @@
+Setting Window Überarbeiten;
+Like Counter By Goals;
+GUI Verbessern;
+!command einbindung;
+
+
+Befehl für die EXE: pyinstaller .\\StreamManager.spec --clean --noconfirm
+Cache: C:\Users\rieck\AppData\Local\Programs\Python\Python313\Lib\site-packages\PyInstaller\__pycache__

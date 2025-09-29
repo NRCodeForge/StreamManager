@@ -1,35 +1,66 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+/* Importiert die von Ihnen gewünschte Schriftart Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+
+/* Animation für Elemente, die NEU ERSCHEINEN (Wünsche, Regeln) */
+@keyframes dbd-flicker-in {
+    0% {
+        opacity: 0;
+        transform: scale(1.05);
+        border-color: rgba(222, 11, 50, 0.5);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        border-color: rgb(222, 11, 50);
+    }
+}
+
+/* NEU: Zeitbasierte "Puls"-Animation für STATISCHE Elemente */
+@keyframes dbd-pulse {
+    0% {
+        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+        border-color: rgb(222, 11, 50);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(222, 11, 50, 0.8); /* Stärkerer Schein */
+        border-color: rgb(255, 41, 76); /* Etwas hellere Farbe */
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+        border-color: rgb(222, 11, 50);
+    }
+}
+
 
 body {
-    background-color: transparent;
-    font-family: 'Bebas Neue', sans-serif;
+    background-color: transparent; /* Wichtig für Overlays */
+    font-family: 'Roboto', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     overflow: hidden;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    color: #e0e0e0;
 }
 
 .main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 20px;
 }
 
+/* Das Timer-Widget verwendet jetzt die neue, zeitbasierte Puls-Animation */
 .tikfinity-widget {
     width: 300px;
     height: 80px;
-    margin-bottom: 20px;
-
-    /* Angepasstes Design, das zum Rule-Item passt */
-    background-color: rgba(10, 10, 10, 0.8);
-    border: 2px solid #ff4500; /* Hier wurde die Rahmenstärke erhöht */
-    border-radius: 8px;
+    background-color: rgba(15, 15, 15, 0.85);
+    border: 2px solid rgb(222, 11, 50);
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
     overflow: hidden;
+    /* Zuerst die Einblend-Animation, dann die unendliche Puls-Animation */
+    animation: dbd-flicker-in 0.7s forwards, dbd-pulse 10s infinite 1s; /* Startet nach 1s Pause */
 }
 
 .tikfinity-widget iframe {
@@ -38,35 +69,26 @@ body {
     border: none;
 }
 
-.rules-container {
-    position: relative;
-    width: 100%;
-    height: 60px;
-    text-align: center;
+/* -- Stile für Killer Wishes & Rules -- */
+/* Diese Stile bleiben unverändert und verwenden weiterhin die "flicker-in" Animation bei Wechsel */
+.wish-container {
+    width: 350px;
+    padding: 20px;
+    background-color: rgba(15, 15, 15, 0.85);
+    border: 2px solid rgb(222, 11, 50);
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+    box-sizing: border-box;
+    animation: dbd-flicker-in 0.7s forwards;
 }
 
-.rule-item {
-    padding: 10px 20px;
-    background-color: rgba(10, 10, 10, 0.8);
-    border: 2px solid #ff4500;
-    border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
-    white-space: nowrap;
-    text-transform: uppercase;
-    font-size: 1.8em;
-    letter-spacing: 2px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+.wish-container.reanimate {
+    animation: none;
+    offset: 100%;
+    animation: dbd-flicker-in 0.7s forwards;
 }
 
-/* Animations-Klassen */
 .rule-item.show {
-    opacity: 1;
-}
-
-.rule-item.hide {
-    opacity: 0;
+    /* Diese Klasse wird per JS getauscht und löst so die Animation aus */
+    animation: dbd-flicker-in 0.7s forwards;
 }

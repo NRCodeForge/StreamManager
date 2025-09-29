@@ -1,16 +1,22 @@
 # -*- mode: python ; coding: utf-8 -*-
 import sys
+import os
 from PyInstaller.utils.hooks import collect_submodules
 
+# --- Konfiguration ---
+# Versteckte Importe, die PyInstaller übersehen könnte (pynput ist hier ein gutes Beispiel)
 hiddenimports = collect_submodules('pynput')
 
+# Datendateien, die ins finale Programmverzeichnis kopiert werden müssen.
+# HINWEIS: Python-Dateien (.py) gehören hier NICHT hinein!
 datas = [
-    ('killerwuensche.db', '.'),
-    ('killer_wishes/*', 'killer_wishes'),
-    ('subathon_overlay/*', 'subathon_overlay')
+    ('killerwuensche.db', '.'),          # Deine Datenbank
+    ('killer_wishes', 'killer_wishes'),  # Der Ordner für das Web-Overlay
+    ('subathon_overlay', 'subathon_overlay'), # Der Ordner für das Subathon-Overlay
+    ('timer_overlay', 'timer_overlay')   # Der Ordner für das Timer-Overlay
 ]
 
-# --- WEBSERVER ---
+# --- Build-Prozess für den Webserver (app.py) ---
 a_web = Analysis(
     ['app.py'],
     pathex=[],
@@ -21,23 +27,21 @@ a_web = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    noarchive=False,
+    noarchive=False
 )
-pyz_web = PYZ(a_web.pure, a_web.zipped_data, cipher=None)
+pyz_web = PYZ(a_web.pure)
 webserver_exe = EXE(
     pyz_web,
     a_web.scripts,
-    [],
-    exclude_binaries=True,
     name='webserver',
     debug=False,
-    bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True
+    console=True, # Webserver läuft in einer Konsole (im Hintergrund)
+    icon=None
 )
 
-# --- STREAMMANAGER ---
+# --- Build-Prozess für die GUI (gui.py) ---
 a_gui = Analysis(
     ['gui.py'],
     pathex=[],
@@ -48,31 +52,30 @@ a_gui = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    noarchive=False,
+    noarchive=False
 )
-pyz_gui = PYZ(a_gui.pure, a_gui.zipped_data, cipher=None)
+pyz_gui = PYZ(a_gui.pure)
 streammanager_exe = EXE(
     pyz_gui,
     a_gui.scripts,
-    [],
-    exclude_binaries=True,
-    name='StreamManager',
+    name='StreamManager_V.1.1',
     debug=False,
-    bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,
-    windowed=True
+    console=False, # GUI ist eine Fensteranwendung
+    windowed=True,
+    icon=None # Optional: 'pfad/zu/deinem/icon.ico'
 )
 
-# --- beide in einen Ordner (gemeinsames COLLECT) ---
+# --- Alles zu einem finalen Ordner zusammenfügen ---
 coll = COLLECT(
-    [webserver_exe, streammanager_exe],
-    a_web.binaries + a_gui.binaries,
-    a_web.zipfiles + a_gui.zipfiles,
-    a_web.datas + a_gui.datas,
+    webserver_exe,
+    streammanager_exe,
+    a_web.binaries,
+    a_web.zipfiles,
+    a_web.datas,
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='StreamBundle'
+    name='StreamBundle' # Name des finalen Ausgabeordners
 )
