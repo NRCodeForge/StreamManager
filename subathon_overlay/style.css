@@ -1,94 +1,120 @@
 /* Importiert die von Ihnen gewünschte Schriftart Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
 
-/* Animation für Elemente, die NEU ERSCHEINEN (Wünsche, Regeln) */
-@keyframes dbd-flicker-in {
-    0% {
-        opacity: 0;
-        transform: scale(1.05);
-        border-color: rgba(222, 11, 50, 0.5);
+/* --- ANIMATIONEN --- */
+
+@keyframes dbd-pulse {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+        border-color: rgb(222, 11, 50);
     }
     50% {
-        opacity: 0.7;
-        transform: scale(1);
+        box-shadow: 0 0 25px rgba(222, 11, 50, 0.8);
+        border-color: rgb(255, 41, 76);
+    }
+}
+
+/* KORRIGIERT: Animation, die mit der Zentrierung funktioniert */
+@keyframes slide-in-from-right {
+    0% {
+        opacity: 0;
+        transform: translate(50%, -50%); /* Startet rechts */
     }
     100% {
         opacity: 1;
-        border-color: rgb(222, 11, 50);
+        transform: translate(-50%, -50%); /* Endet zentriert */
     }
 }
 
-/* NEU: Zeitbasierte "Puls"-Animation für STATISCHE Elemente */
-@keyframes dbd-pulse {
+/* KORRIGIERT: Animation, die mit der Zentrierung funktioniert */
+@keyframes slide-out-to-left {
     0% {
-        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
-        border-color: rgb(222, 11, 50);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(222, 11, 50, 0.8); /* Stärkerer Schein */
-        border-color: rgb(255, 41, 76); /* Etwas hellere Farbe */
+        opacity: 1;
+        transform: translate(-50%, -50%); /* Startet zentriert */
     }
     100% {
-        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
-        border-color: rgb(222, 11, 50);
+        opacity: 0;
+        transform: translate(-150%, -50%); /* Endet links */
     }
 }
 
+/* --- ALLGEMEINE STILE --- */
 
 body {
-    background-color: transparent; /* Wichtig für Overlays */
+    background-color: transparent;
     font-family: 'Roboto', sans-serif;
+    margin: 0;
+    height: 100vh;
+    color: #E0E0E0;
+
+    /* Stellt sicher, dass der Inhalt zentriert wird */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
 }
 
+/* Ein Container, der mehrere Widgets untereinander anordnen kann */
 .main-container {
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Abstand zwischen Timer und Regeln, falls beide aktiv sind */
 }
 
-/* Das Timer-Widget verwendet jetzt die neue, zeitbasierte Puls-Animation */
-.tikfinity-widget {
+/* --- WIDGET-STILE --- */
+
+/* Stil für das Timer-Widget */
+.overlay-widget {
     width: 300px;
     height: 80px;
-    background-color: rgba(15, 15, 15, 0.85);
+    background-color: rgba(15, 15, 15, 0.75);
     border: 2px solid rgb(222, 11, 50);
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
     overflow: hidden;
-    /* Zuerst die Einblend-Animation, dann die unendliche Puls-Animation */
-    animation: dbd-flicker-in 0.7s forwards, dbd-pulse 10s infinite 1s; /* Startet nach 1s Pause */
+    animation: dbd-pulse 10s infinite;
 }
 
-.tikfinity-widget iframe {
+.overlay-widget iframe {
     width: 100%;
     height: 100%;
     border: none;
 }
 
-/* -- Stile für Killer Wishes & Rules -- */
-/* Diese Stile bleiben unverändert und verwenden weiterhin die "flicker-in" Animation bei Wechsel */
-.wish-container {
-    width: 350px;
-    padding: 20px;
-    background-color: rgba(15, 15, 15, 0.85);
+/* Container für die rotierenden Regeln */
+.rules-container {
+    position: relative;
+    width: 450px;
+    height: 60px;
+}
+
+/* Stil für die einzelnen Regel-Items */
+.rule-item {
+    position: absolute;
+    /* KORREKTUR: Dies ist die korrekte und stabile Methode zur Zentrierung */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    padding: 12px 25px;
+    background-color: rgba(15, 15, 15, 0.75);
     border: 2px solid rgb(222, 11, 50);
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
-    box-sizing: border-box;
-    animation: dbd-flicker-in 0.7s forwards;
+
+    opacity: 0; /* Standardmäßig unsichtbar */
+    white-space: nowrap;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    letter-spacing: 1px;
 }
 
-.wish-container.reanimate {
-    animation: none;
-    offset: 100%;
-    animation: dbd-flicker-in 0.7s forwards;
-}
-
+/* Klassen, die die Animationen auslösen */
 .rule-item.show {
-    /* Diese Klasse wird per JS getauscht und löst so die Animation aus */
-    animation: dbd-flicker-in 0.7s forwards;
+    animation: slide-in-from-right 0.6s forwards;
+}
+
+.rule-item.hide {
+    animation: slide-out-to-left 0.6s forwards;
 }

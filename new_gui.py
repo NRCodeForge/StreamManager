@@ -1,5 +1,3 @@
-# Datei: stream_overlay_manager.py
-
 import threading
 import tkinter as tk
 from tkinter import messagebox, font
@@ -10,18 +8,16 @@ import requests
 from pynput import keyboard
 import logging
 
-# Versuche, das Einstellungsfenster zu importieren
+# Versuche, die Einstellungsfenster zu importieren
 try:
     from settings_window import SettingsWindow
+    from like_challenge_settings_window import LikeChallengeSettingsWindow
 except ImportError:
-    print("Hinweis: 'settings_window.py' nicht gefunden. Der Einstellungs-Button hat keine Funktion.")
-
-
-    # Fallback, falls die Datei fehlt, damit das Programm nicht abstürzt
+    print("Hinweis: Einstellungs-Dateien nicht gefunden.")
     class SettingsWindow:
-        def __init__(self, master):
-            print("SettingsWindow-Platzhalter: Fenster würde sich hier öffnen.")
-            messagebox.showinfo("Platzhalter", "Dies würde das Einstellungsfenster öffnen.")
+        def __init__(self, master): messagebox.showinfo("Platzhalter", "Dies würde das Einstellungsfenster öffnen.")
+    class LikeChallengeSettingsWindow:
+        def __init__(self, master): messagebox.showinfo("Platzhalter", "Dies würde das Like-Challenge-Fenster öffnen.")
 
 
 # --- Pfad- und Logging-Konfiguration ---
@@ -233,9 +229,14 @@ def reset_database_action():
             messagebox.showerror("Fehler", f"Serverfehler: {e}")
 
 
-def open_settings_window():
+def open_subathon_settings_window():
     if 'root' in globals():
         SettingsWindow(root)
+
+# NEUE FUNKTION HINZUGEFÜGT
+def open_like_challenge_settings_window():
+    if 'root' in globals():
+        LikeChallengeSettingsWindow(root)
 
 
 def on_press(key):
@@ -262,14 +263,17 @@ if __name__ == '__main__':
         {"name": "Wishlist", "path": "killer_wishes/index.html", "has_settings": False, "has_reset": True,
          "reset_func": reset_database_action},
         {"name": "Subathon Overlay", "path": "subathon_overlay/index.html", "has_settings": True,
-         "settings_func": open_settings_window, "has_reset": False},
-        {"name": "Timer Overlay", "path": "timer_overlay/index.html", "has_settings": False, "has_reset": False}
+         "settings_func": open_subathon_settings_window, "has_reset": False},
+        {"name": "Timer Overlay", "path": "timer_overlay/index.html", "has_settings": False, "has_reset": False},
+        # NEUES ELEMENT HINZUGEFÜGT
+        {"name": "Like Challenge", "path": "like_challenge_overlay/index.html", "has_settings": True,
+         "settings_func": open_like_challenge_settings_window, "has_reset": False}
     ]
 
     # --- GUI-Setup ---
     root = tk.Tk()
     root.title("Stream Overlay Manager")
-    root.geometry("600x480")
+    root.geometry("600x520") # Höhe für neues Element angepasst
     root.resizable(False, False)
     root.configure(bg=Style.BACKGROUND)
     root.protocol("WM_DELETE_WINDOW", on_app_close)
@@ -294,8 +298,14 @@ if __name__ == '__main__':
 
     for config in UI_ELEMENTS_CONFIG:
         url = f"{BASE_URL}{config['path']}"
-        card = UIElementCard(parent=element_manager_frame, name=config["name"], url=url,
-                             **{k: v for k, v in config.items() if k not in ["name", "path"]})
+        # Standardwerte für nicht vorhandene Schlüssel setzen, um Fehler zu vermeiden
+        card_config = {
+            "has_settings": config.get("has_settings", False),
+            "has_reset": config.get("has_reset", False),
+            "settings_func": config.get("settings_func"),
+            "reset_func": config.get("reset_func")
+        }
+        card = UIElementCard(parent=element_manager_frame, name=config["name"], url=url, **card_config)
         card.pack(fill=tk.X, pady=6)
 
     # Hotkey Frame (Unten)

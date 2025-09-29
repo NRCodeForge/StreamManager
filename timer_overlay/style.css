@@ -1,7 +1,7 @@
 /* Importiert die von Ihnen gewünschte Schriftart Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
 
-/* Keyframe-Animation für den "Flicker"-Effekt beim Einblenden */
+/* Animation für das erste Einblenden */
 @keyframes dbd-flicker-in {
     0% {
         opacity: 0;
@@ -18,8 +18,24 @@
     }
 }
 
+/* Zeitbasierte "Puls"-Animation für statische Elemente */
+@keyframes dbd-pulse {
+    0% {
+        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+        border-color: rgb(222, 11, 50);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(222, 11, 50, 0.8);
+        border-color: rgb(255, 41, 76);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
+        border-color: rgb(222, 11, 50);
+    }
+}
+
 body {
-    background-color: transparent; /* Wichtig für Overlays */
+    background-color: transparent;
     font-family: 'Roboto', sans-serif;
     display: flex;
     justify-content: center;
@@ -36,12 +52,13 @@ body {
 .tikfinity-widget {
     width: 300px;
     height: 80px;
-    background-color: rgba(15, 15, 15, 0.85);
+    background-color: rgba(15, 15, 15, 0.75);
     border: 2px solid rgb(222, 11, 50);
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(222, 11, 50, 0.4);
     overflow: hidden;
-    animation: dbd-flicker-in 0.7s forwards;
+    /* KORREKTUR: Zuerst Einblenden, dann die unendliche Puls-Animation alle 10s */
+    animation: dbd-flicker-in 0.7s forwards, dbd-pulse 10s infinite 1s;
 }
 
 .tikfinity-widget iframe {

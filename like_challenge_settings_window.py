@@ -91,13 +91,9 @@ class LikeChallengeSettingsWindow(tk.Toplevel):
 
     def save_and_close(self):
         try:
-            # Konvertiere den String der Ziele in eine Liste von Integern
-            goals_str = self.settings_vars["initialGoals"].get()
-            initial_goals_list = [int(goal.strip()) for goal in goals_str.split(',') if goal.strip()]
-
             settings_to_save = {
                 "widgetUrl": self.settings_vars["widgetUrl"].get(),
-                "initialGoals": initial_goals_list,
+                "initialGoals": [int(goal.strip()) for goal in self.settings_vars["initialGoals"].get().split(',')],
                 "recurringGoalExpression": self.settings_vars["recurringGoalExpression"].get(),
                 "displayTextFormat": self.settings_vars["displayTextFormat"].get()
             }
